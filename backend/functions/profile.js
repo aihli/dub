@@ -1,6 +1,6 @@
-export const createProfile = (database, username, password) => {
+export const createProfile = async (database, username, password) => {
   const userRef = database.ref(`users/${username}`);
-  userRef.once("value").then((snapshot) => {
+  const status = await userRef.once("value").then((snapshot) => {
     if (!snapshot.val()) {
       userRef.set({
         username: username,
@@ -10,6 +10,7 @@ export const createProfile = (database, username, password) => {
     }
     return false;
   });
+  return status;
 };
 
 export const getWeeklySentimentInfo = async (database, username) => {
@@ -29,14 +30,14 @@ export const getWeeklySentimentInfo = async (database, username) => {
     today.setDate(today.getDate() - 1);
   }
   sentimentInfo.reverse();
-  console.log(sentimentInfo);
+  return sentimentInfo;
 };
 
-export const addFriend = (database, username, friendname) => {
+export const addFriend = async (database, username, friendname) => {
   const userRef = database.ref(`users/${username}`);
-  userRef.once("value").then((snapshot) => {
+  const status = await userRef.once("value").then((snapshot) => {
     if (!snapshot.val()) {
-      return;
+      return false;
     }
     let friends = [friendname];
     if (snapshot.val().friends) {
@@ -46,5 +47,20 @@ export const addFriend = (database, username, friendname) => {
     userRef.update({
       friends: friends,
     });
+    return true;
   });
+  return status;
+};
+
+export const getFriends = async (database, username) => {
+  const userRef = database.ref(`users/${username}/friends`);
+  const friends = await userRef.once("value").then((snapshot) => {
+    console.log(snapshot.val());
+    if (!snapshot.val()) {
+      return [];
+    } else {
+      return snapshot.val();
+    }
+  });
+  return friends;
 };

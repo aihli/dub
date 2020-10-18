@@ -1,6 +1,5 @@
 export const getSentiment = async (client, database, username, texts) => {
   let sentimentScore = 0;
-
   for (const text of texts) {
     const document = {
       content: text,
@@ -13,7 +12,8 @@ export const getSentiment = async (client, database, username, texts) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
   const date = new Date().toLocaleDateString(undefined, options);
   const userRef = database.ref(`users/${username}/sentiment/${date}`);
-  userRef.set({
+  await userRef.set({
     score: sentimentScore,
   });
+  return sentimentScore;
 };
