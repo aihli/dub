@@ -17,20 +17,23 @@ export const getWeeklySentimentInfo = async (database, username) => {
   const today = new Date();
   const options = { year: "numeric", month: "long", day: "numeric" };
   const sentimentInfo = [];
+  const days = [];
   for (let i = 0; i < 7; ++i) {
     const date = today.toLocaleDateString(undefined, options);
+    days.push(date);
     const userRef = database.ref(`users/${username}/sentiment/${date}`);
     await userRef.once("value").then((snapshot) => {
       if (!snapshot.val()) {
-        sentimentInfo.push(0);
+        sentimentInfo.push(undefined);
       } else {
         sentimentInfo.push(snapshot.val().score);
       }
     });
     today.setDate(today.getDate() - 1);
   }
+  days.reverse();
   sentimentInfo.reverse();
-  return sentimentInfo;
+  return [sentimentInfo, days];
 };
 
 export const addFriend = async (database, username, friendname) => {

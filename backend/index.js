@@ -22,6 +22,15 @@ const port = 8080;
 app.use(express.json());
 app.use(cors());
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.post("/create", async (req, res) => {
   const { username, password } = req.body;
   const status = await createProfile(database, username, password);
@@ -49,9 +58,10 @@ app.post("/friends", async (req, res) => {
 
 app.get("/sentiment", async (req, res) => {
   const { username } = req.query;
-  const sentiments = await getWeeklySentimentInfo(database, username);
+  const [sentiments, days] = await getWeeklySentimentInfo(database, username);
   res.json({
     sentiments: sentiments,
+    days: days,
   });
 });
 
@@ -62,16 +72,6 @@ app.post("/sentiment", async (req, res) => {
     sentimentScore: sentimentScore,
   });
 });
-
-// getSentiment(client, ["I really don't feel super great, ever since the quarantine started. My life fucking sucks"]);
-
-// createProfile(database, "jimmy", "neutron");
-// getWeeklySentimentInfo(database, "jimmy");
-// getSentiment(client, database, "jimmy", ["HELLO THIS IS THE WORST DAY OF MY LIFE"]);
-
-// addFriend(database, "jimmy", "remy");
-// createProfile(database, "remy", "10293");
-// addFriend(database, "remy", "jimmy");
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

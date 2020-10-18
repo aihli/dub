@@ -1,38 +1,30 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
-import background from "./images/background.svg";
 import "./App.css";
 import Login from "./components/Login.js";
+import StartPage from "./components/StartPage";
+import HomePage from "./components/HomePage";
+import ChoicePage from "./components/ChoicePage";
+import ResultPage from "./components/ResultPage";
 
 function App() {
-
   const [currPage, setCurrPage] = useState("start");
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("Alice");
 
-  const goToLogin = function() {
-    setCurrPage("login");
-  }
+  const navigatePage = (page) => {
+    setCurrPage(page);
+  };
 
   if (currPage === "start") {
-    return (
-      <div className="App">
-        <img idName="background" src={background}></img>
-  
-        <div className="flex-container">
-          <strong>
-            Welcome to [logo]
-          </strong>
-          <button onClick={goToLogin} type="button">Let's Get Started</button>
-        </div>
-        
-        
-      </div>
-    );
+    return <StartPage navigatePage={navigatePage} />;
   } else if (currPage === "login") {
-    return <Login setUsername={setUsername}></Login>;
+    return <Login navigatePage={navigatePage} setUsername={setUsername} />;
+  } else if (currPage === "home") {
+    return <HomePage navigatePage={navigatePage} username={username} />;
+  } else if (currPage === "choice") {
+    return <ChoicePage navigatePage={navigatePage} username={username} />;
+  } else if (currPage === "result") {
+    return <ResultPage navigatePage={navigatePage} username={username} />;
   }
-
-  
 }
 
 export default App;
