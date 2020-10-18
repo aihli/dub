@@ -1,26 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { getSentiment } from "./backend/setup";
+import React from "react";
+import logo from "./logo.svg";
+import background from "./images/background.svg";
+import "./App.css";
 
 function App() {
-  getSentiment(["hello darkness my old friend"])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <img idName="background" src={background}></img>
+      <header className="App-header"></header>
     </div>
   );
 }
